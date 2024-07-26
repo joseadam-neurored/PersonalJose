@@ -5,7 +5,7 @@ node ('agent'){
     def ORG_LIST = params.ORG_LIST.split('\n')
     def SF_CONSUMER_KEY = "3MVG9k02hQhyUgQDJCnSUUKcwU_kRQ4HwnwVKlslkIOs8dKY4kt7kQQXM2aX7ZoR3tvlZD13z_FGojLGUBU1O"
     def SF_USERNAME = params.SF_USERNAME
-    def INSTALLATION_KEY = params.LS_SF_INSTALLATION_KEY
+    def INSTALLATION_KEY = params.INSTALLATION_KEY
     def PACKAGE_NAME = "ProyectoPrueba"
 
 
@@ -70,14 +70,16 @@ JbmHp76mj2srOJf7Pu34Lg==
                 println(rc)          
             }
             stage("Running Tests in ${org}") {
-                rc = commandWithResponse "sf apex run test  -l RunLocalTests -w 10 --target-org  ${org} --json -c"
+                def rc = sh(script: "sf apex run test -l RunLocalTests -w 10 --target-org ${org} --json -c", returnStdout: true).trim()
                 echo rc
+                
+                // Parse the JSON response
                 def jsonSlurper = new JsonSlurperClassic()
-                def response = jsonParse(rc)
-                status = response["status"]
+                def response = jsonSlurper.parseText(rc)
+                def status = response["status"]
                 if (status != 0) {
-                    TEST_COVERAGE_ERROR = STAGE_SIX_ERROR
-                }else {
+                    TEST_COVERAGE_ERROR = "Error running tests in ${org}"
+                } else {
                     TEST_COVERAGE_VALUE = response["result"]["coverage"]["summary"]["testRunCoverage"]
                 }
             }
