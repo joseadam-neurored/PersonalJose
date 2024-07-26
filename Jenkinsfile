@@ -57,13 +57,13 @@ JbmHp76mj2srOJf7Pu34Lg==
                 def rc = sh(script: "cd ${PACKAGE_NAME} && sf package version create --package \"${PACKAGE_NAME}\" -v ${org} --installation-key ${INSTALLATION_KEY} --wait 10 --json --skip-validation", returnStdout: true).trim()
                 echo rc
                 def jsonSlurper = new JsonSlurperClassic()
-                def response = jsonParse(rc)
-                status = response["status"]
+                def response = jsonSlurper.parseText(rc)
+                def status = response["status"]
                 if (status != 0) {
                     error "Error Creation new version for ${org}"
                 }else {
                     PACKAGE_VERSION = response["result"]["SubscriberPackageVersionId"]
-                }             
+                }
             }
             stage("Install package in ${org}") {
                 def rc = sh(script: "sf package install --package ${PACKAGE_VERSION} --target-org ${org} --installation-key ${INSTALLATION_KEY} --wait 10 --No matching source was found within the package root directory: force-apppublish-wait 10", returnStdout: true).trim()
