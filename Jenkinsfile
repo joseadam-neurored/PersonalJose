@@ -53,10 +53,8 @@ JbmHp76mj2srOJf7Pu34Lg==
                     error "Failed to Authorize DevHub for ${org}"
                 }
             }
-        withEnv(["HOME=${env.WORKSPACE}"]) {
             stage("Create package new version for ${org}") {
-                sh(script: "cd \"${PACKAGE_NAME}\" ", returnStdout: true).trim() 
-                def rc = sh(script: "sf package version create --package \"${PACKAGE_NAME}\" -v ${org} --installation-key ${INSTALLATION_KEY} --wait 10 --json --skip-validation", returnStdout: true).trim()
+                def rc = sh(script: "cd \"${PACKAGE_NAME}\ && sf package version create --package \"${PACKAGE_NAME}\" -v ${org} --installation-key ${INSTALLATION_KEY} --wait 10 --json --skip-validation", returnStdout: true).trim()
                 echo rc
                 def jsonSlurper = new JsonSlurperClassic()
                 def response = jsonParse(rc)
@@ -85,5 +83,4 @@ JbmHp76mj2srOJf7Pu34Lg==
             }
         }
     }
-}
 }
