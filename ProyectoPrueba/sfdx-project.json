@@ -1,0 +1,20 @@
+{
+  "packageDirectories": [
+    {
+      "versionName": "ver 0.1",
+      "versionNumber": "0.1.0.NEXT",
+      "path": "force-app",
+      "default": true,
+      "package": "ProyectoPrueba",
+      "versionDescription": "Descripción del Paquete"
+    }
+  ],
+  "name": "ProyectoPrueba",
+  "namespace": "",
+  "sfdcLoginUrl": "https://login.salesforce.com",
+  "sourceApiVersion": "61.0",
+  "packageAliases": {
+    "ProyectoPrueba": "0HoQy0000000GhVKAU",
+    "ProyectoPrueba@0.1.0-1": "04tQy0000002CbNIAU"
+  }
+}
