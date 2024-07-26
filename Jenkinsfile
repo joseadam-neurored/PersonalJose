@@ -6,7 +6,7 @@ node ('agent'){
     def SF_CONSUMER_KEY = "3MVG9k02hQhyUgQDJCnSUUKcwU_kRQ4HwnwVKlslkIOs8dKY4kt7kQQXM2aX7ZoR3tvlZD13z_FGojLGUBU1O"
     def SF_USERNAME = params.SF_USERNAME
     def INSTALLATION_KEY = params.LS_SF_INSTALLATION_KEY
-    def PACKAGE_NAME = "PaquetePrueba"
+    def PACKAGE_NAME = "ProyectoPrueba"
 
 
     stage("Checking Source") {
