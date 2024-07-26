@@ -66,7 +66,7 @@ JbmHp76mj2srOJf7Pu34Lg==
                 }
             }
             stage("Install package in ${org}") {
-                def rc = sh(script: "sf package install --package ${PACKAGE_VERSION} --target-org ${org} --installation-key ${INSTALLATION_KEY} --wait 10 --No matching source was found within the package root directory: force-apppublish-wait 10", returnStdout: true).trim()
+                def rc = sh(script: "sf package install --package ${PACKAGE_VERSION} --target-org ${org} --installation-key ${INSTALLATION_KEY} --wait 10 --json", returnStdout: true).trim()
                 println(rc)          
             }
             stage("Running Tests in ${org}") {
