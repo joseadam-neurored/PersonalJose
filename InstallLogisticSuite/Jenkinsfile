@@ -62,7 +62,7 @@ JbmHp76mj2srOJf7Pu34Lg==
                 println("Output of the command:\n${output}")
 
                 // Filtrar la última línea y extraer el ID del paquete
-                def packageVersionId = output.tokenize('\n').last().split().find { it.startsWith("04t") }
+                PACKAGE_VERSION_ID = output.tokenize('\n').last().split().find { it.startsWith("04t") }
 
                 // Mostrar el ID del paquete
                 println("PACKAGE_VERSION_ID: ${packageVersionId}")
