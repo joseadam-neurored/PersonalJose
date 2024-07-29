@@ -55,7 +55,7 @@ JbmHp76mj2srOJf7Pu34Lg==
             }
             stage("List last version of package in ${org}") {
                 // Ejecutar el comando y capturar la salida
-                def command = "cd ${PACKAGE_NAME} && sf package version list -v ${org} -p ${PACKAGE_NAME}"
+                def command = "sf package version list -v ${org} -p ${PACKAGE_NAME}"
                 def output = sh(script: command, returnStdout: true).trim()
 
                 // Mostrar la salida completa para depuración
