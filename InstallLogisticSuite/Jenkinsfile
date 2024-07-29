@@ -6,7 +6,7 @@ node ('agent'){
     def SF_CONSUMER_KEY = "3MVG9k02hQhyUgQDJCnSUUKcwU_kRQ4HwnwVKlslkIOs8dKY4kt7kQQXM2aX7ZoR3tvlZD13z_FGojLGUBU1O"
     def SF_USERNAME = "jose03adam@gmail.com"
     def INSTALLATION_KEY = params.INSTALLATION_KEY
-    def PACKAGE_NAME = "PaquetePrueba"
+    def PACKAGE_NAME = "ProyectoPrueba"
     def PACKAGE_VERSION_ID
 
     stage("Checking Source") {
@@ -54,8 +54,18 @@ JbmHp76mj2srOJf7Pu34Lg==
                 }
             }
             stage("List last version of package in ${org}") {
-                PACKAGE_VERSION_ID = sh(script: "cd ${PACKAGE_NAME} && sf package version list -v ${org} -p ${PACKAGE_NAME} | tail -n 1 | awk '{for(i=1;i<=NF;i++) if ($i ~ /^04t/) print $i}'", returnStdout: true).trim()
-                println(PACKAGE_VERSION_ID)          
+                // Ejecutar el comando y capturar la salida
+                def command = "cd ${PACKAGE_NAME} && sf package version list -v ${org} -p ${PACKAGE_NAME}"
+                def output = sh(script: command, returnStdout: true).trim()
+
+                // Mostrar la salida completa para depuración
+                println("Output of the command:\n${output}")
+
+                // Filtrar la última línea y extraer el ID del paquete
+                def packageVersionId = output.tokenize('\n').last().split().find { it.startsWith("04t") }
+
+                // Mostrar el ID del paquete
+                println("PACKAGE_VERSION_ID: ${packageVersionId}")
             }
             stage("Install package in ${org}") {
                 def rc = sh(script: "sf package install --package ${PACKAGE_VERSION_ID} --target-org ${org} --installation-key ${INSTALLATION_KEY} --wait 10 --json", returnStdout: true).trim()
