@@ -6,8 +6,8 @@ node ('agent'){
     def SF_CONSUMER_KEY = "3MVG9k02hQhyUgQDJCnSUUKcwU_kRQ4HwnwVKlslkIOs8dKY4kt7kQQXM2aX7ZoR3tvlZD13z_FGojLGUBU1O"
     def SF_USERNAME = "jose03adam@gmail.com"
     def INSTALLATION_KEY = params.INSTALLATION_KEY
-    def PACKAGE_ID = "04tQy0000002CzZIAU"
-    def PACKAGE_VERSION = params.PACKAGE_VERSION
+    def PACKAGE_NAME = "PaquetePrueba"
+    def PACKAGE_VERSION_ID
 
     stage("Checking Source") {
         checkout scm
@@ -15,7 +15,7 @@ node ('agent'){
 
     withEnv(["HOME=${env.WORKSPACE}"]) {
         ORG_LIST.each { org -> 
-            stage("Authorizing DevHub Access for ${org}") {
+            stage("Authorizing DevHub Access in ${org}") {
                                 sh '''
                     echo "
 -----BEGIN PRIVATE KEY-----
@@ -50,11 +50,15 @@ JbmHp76mj2srOJf7Pu34Lg==
                 def rc = sh(script: "sf org login jwt --client-id ${SF_CONSUMER_KEY} --username ${SF_USERNAME} --alias ${org} --jwt-key-file /tmp/server.key", returnStatus: true)
                 println(rc)
                 if (rc != 0) {
-                    error "Failed to Authorize DevHub for ${org}"
+                    error "Failed to Authorize DevHub in ${org}"
                 }
             }
+            stage("List last version of package in ${org}") {
+                PACKAGE_VERSION_ID = sh(script: "cd ${PACKAGE_NAME} && sf package version list -v ${org} -p ${PACKAGE_NAME} | tail -n 1 | awk '{for(i=1;i<=NF;i++) if ($i ~ /^04t/) print $i}'", returnStdout: true).trim()
+                println(PACKAGE_VERSION_ID)          
+            }
             stage("Install package in ${org}") {
-                def rc = sh(script: "sf package install --package ${PACKAGE_ID}@${PACKAGE_VERSION}  --target-org ${org} --installation-key ${INSTALLATION_KEY} --wait 10 --json", returnStdout: true).trim()
+                def rc = sh(script: "sf package install --package ${PACKAGE_VERSION_ID} --target-org ${org} --installation-key ${INSTALLATION_KEY} --wait 10 --json", returnStdout: true).trim()
                 println(rc)          
             }
             stage("Running Tests in ${org}") {
