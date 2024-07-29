@@ -65,7 +65,7 @@ JbmHp76mj2srOJf7Pu34Lg==
                 PACKAGE_VERSION_ID = output.tokenize('\n').last().split().find { it.startsWith("04t") }
 
                 // Mostrar el ID del paquete
-                println("PACKAGE_VERSION_ID: ${packageVersionId}")
+                println("PACKAGE_VERSION_ID: ${PACKAGE_VERSION_ID}")
             }
             stage("Install package in ${org}") {
                 def rc = sh(script: "sf package install --package ${PACKAGE_VERSION_ID} --target-org ${org} --installation-key ${INSTALLATION_KEY} --wait 10 --json", returnStdout: true).trim()
