@@ -5,7 +5,7 @@ node ('agent'){
     def SF_CONSUMER_KEY=env.LS_SF_CONSUMER_KEY
     def SF_USERNAME= "ususario@correo.com"
     def ORG_ALIAS = params.ORG_ALIAS
-    def snapshotId
+    def SNAPSHOT_ID
 
     def SNAPSHOT_NAME = params.SNAPSHOT_NAME
     def SOURCE_SCRATCH_ID = params.SOURCE_SCRATCH_ID
@@ -23,11 +23,11 @@ node ('agent'){
             stage("Creating Snapshot from Scratch Org") {
                 def rc = sh(script: "sf org create snapshot --name ${SNAPSHOT_NAME} --source-org ${SOURCE_SCRATCH_ID} --target-dev-hub ${ORG_ALIAS}", returnStdout: true).trim()
                 
-                env.snapshotId = sh(script: "echo '${rc}' | awk '/^ Id/ {print \$2}'", returnStdout: true).trim()
+                env.SNAPSHOT_ID = sh(script: "echo '${rc}' | awk '/^ Id/ {print \$2}'", returnStdout: true).trim()
 
-                println("Snapshot ID: ${env.snapshotId}")
+                println("Snapshot ID: ${env.SNAPSHOT_ID}")
                 
-                if (env.snapshotId == " ") {
+                if (env.SNAPSHOT_ID == " ") {
                     error "Failed to Create Snapshot"
                 } 
 
@@ -36,7 +36,7 @@ node ('agent'){
                     def snapshotReady = false
                     while (!snapshotReady) {
                         // Ejecutar el comando para obtener el estado del snapshot
-                        def rc = sh(script: "sf org get snapshot --snapshot ${env.snapshotId} --target-dev-hub ${ORG_ALIAS}", returnStdout: true).trim()
+                        def rc = sh(script: "sf org get snapshot --snapshot ${env.SNAPSHOT_ID} --target-dev-hub ${ORG_ALIAS}", returnStdout: true).trim()
                         echo "Snapshot Command Output:\n${rc}"
 
                         // Extraer el estado usando awk
